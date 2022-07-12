@@ -1,0 +1,39 @@
+.backDiv{
+    width: 1900px;
+    height: 900px;
+    border: 1px solid dodgerblue;
+    background-color: white}
+.head{
+    margin-top: 10px;
+    margin-left: 10px;
+    width:1880px;
+    height: 125px;
+    border: 1px solid dodgerblue;
+    background-color: white;
+}
+.leftMap{
+    float: left;
+    margin-top: 10px;
+    margin-left: 10px;
+    height: 590px;
+    width: 1430px;
+    border: 1px solid dodgerblue;
+}
+.rightMap{
+    float:right;
+    background-color: white;
+    margin-top: 10px;
+    margin-right: 10px;
+    width:430px;
+    height:740px;
+    border: 1px solid dodgerblue;
+}
+.footer{
+    float:left;
+    background-color: white;
+    margin-top: 10px;
+    margin-left: 10px;
+    height:140px;
+    width:1430px;
+    border: 1px solid dodgerblue;
+}
