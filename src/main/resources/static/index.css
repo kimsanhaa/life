@@ -36,4 +36,44 @@
     height:140px;
     width:1430px;
     border: 1px solid dodgerblue;
+    text-align: center;
+}
+
+#table > div{
+    margin-top: 10px;
+    margin-left: 10px;
+    width: 400px;
+    height:80px;
+    border: 1px solid dodgerblue;
+    font-size: 20px;
+    text-align: center;
+}
+#btn{
+    float:right;
+    margin-right: 20px;
+    background-color: dodgerblue;
+    color: white;
+    border: 1px solid dodgerblue;
+    width:70px;
+    height:30px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.footer >div {
+    font-size: 25px;
+}
+.footer > input{
+    margin-top: 20px;
+    width:100px;
+    height: 40px;
+    background-color: dodgerblue;
+    color: white;
+    border: 1px solid dodgerblue;
+    font-size: 20px;
+}
+#table{
+    height:700px;
+    overflow: auto;
+
 }

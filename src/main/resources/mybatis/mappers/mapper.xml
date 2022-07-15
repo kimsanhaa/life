@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="life.semantics.kimsanha.dao.dao">
+    <resultMap id="locationResult" type="vo">
+        <result property="location_name" column="location_name"/>
+        <result property="location" column="location"/>
+        <result property="phoneNum" column="phoneNum"/>
+        <result property="coordinate" column="coordinate"/>
+        <result property="num" column="num"/>
+
+    </resultMap>
+    <select id="save" resultType="vo">
+		<![CDATA[
+        INSERT INTO location_db(location_name,location,phoneNum,coordinate)
+        VALUES ( #{location_name},#{location} ,#{phoneNum} ,#{coordinate})]]>
+	</select>
+
+    <select id="search" resultMap="locationResult">
+    <![CDATA[
+        SELECT * FROM location_db
+        ORDER BY num DESC
+            limit 0, 10;
+        ]]>
+  </select>
+
+    <select id="delete">
+    <![CDATA[
+        DELETE FROM location_db where location_name=#{location_name};
+        ]]>
+  </select>
+
+    <select id="numCheck" resultType="int">
+    <![CDATA[
+        select num from location_db order by num desc limit 1;
+        ]]>
+  </select>
+
+    <select id="searchCheck" resultType="int">
+    <![CDATA[
+        SELECT count(*) FROM location_db WHERE  location_name=#{location_name};
+        ]]>
+  </select>
+
+    <select id="allSearch" resultMap="locationResult">
+    <![CDATA[
+        SELECT * FROM location_db ORDER BY num DESC;
+        ]]>
+  </select>
+
+
+</mapper>

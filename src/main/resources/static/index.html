@@ -1,199 +1,273 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>이동 이벤트 등록하기</title>
 
-</head>
-<body>
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org"-->
+<!--      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
+<!--      layout:decorate="~{layout/layout}">-->
+<!--<html>-->
+<!--<head>-->
+<!--    <meta charset="utf-8">-->
+<!--    <title>이동 이벤트 등록하기</title>-->
 
-<p id="result"></p>
-<div class="backDiv">
-    <div class="head">
-        병원찾기 라이프라이프시맨틱스 2차면접 과제
-    </div>
-    <div class="leftMap">
-        <div id="map" style="width:100%;height:100%;"></div>
-    </div>
-    <div class="rightMap">
-        rightMap
-    </div>
-    <div class="footer">
-        <div id="name"></div>
-        <div id="location"></div>
-        <div id="phoneNum"></div>
-        <div id="coordinate"></div>
-        <button id="saveBtn" style="display:none" >저장</button>
-        <button id="canBtn" style="display:none">취소</button>
-    </div>
-</div>
+<!--</head>-->
+<!--<body>-->
 
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cd7376c6e132d86a89f03a382431f2ae"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<link rel="stylesheet" type="text/css" href = "index.css">
-<script>
-    var markers=[];
-    // 지도를 생성합니다
-    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-        mapOption = {
-            center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-            level: 3 // 지도의 확대 레벨
-        };
+<!--<p id="result"></p>-->
+<!--<div class="backDiv">-->
+<!--    <div class="head">-->
+<!--        병원찾기 라이프라이프시맨틱스 2차면접 과제-->
+<!--    </div>-->
+<!--    <div class="leftMap">-->
+<!--        <div id="map" style="width:100%;height:100%;"></div>-->
+<!--    </div>-->
+<!--    <div class="rightMap">-->
+<!--        <tr th:each="list : ${list}">-->
+<!--            <td th:text="${list.location_name}"></td>-->
+<!--            <td th:text="${list.location}"></td>-->
+<!--            <td th:text="${list.phoneNum}"></td>-->
+<!--            <td th:text="${list.coordinate}"></td>-->
+<!--        </tr>-->
 
-    var map = new kakao.maps.Map(mapContainer, mapOption);
+<!--    </div>-->
+<!--    <div class="footer">-->
+<!--        <div id="name"></div>-->
+<!--        <div id="location"></div>-->
+<!--        <div id="phoneNum"></div>-->
+<!--        <div id="coordinate"></div>-->
+<!--        <input id="saveBtn" style="display:none" type="button" value="저장" onclick="save()"/>-->
+<!--        <input id="canBtn" style="display:none" type="button" value="취소" onclick="cancel()"/>-->
+<!--&lt;!&ndash;        <button id="saveBtn" style="display:none" >저장</button>&ndash;&gt;-->
+<!--&lt;!&ndash;        <button id="canBtn" style="display:none">취소</button>&ndash;&gt;-->
+<!--    </div>-->
+<!--</div>-->
 
-    // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
-    if (navigator.geolocation) {
-        // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-        navigator.geolocation.getCurrentPosition(function(position) {
+<!--<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cd7376c6e132d86a89f03a382431f2ae"></script>-->
+<!--<script src="https://code.jquery.com/jquery-3.5.1.js"></script>-->
+<!--<link rel="stylesheet" type="text/css" href = "index.css">-->
+<!--<script>-->
+<!--    var markers=[];-->
+<!--    // 지도를 생성합니다-->
+<!--    var mapContainer = document.getElementById('map'), // 지도를 표시할 div-->
+<!--        mapOption = {-->
+<!--            center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표-->
+<!--            level: 3 // 지도의 확대 레벨-->
+<!--        };-->
 
-            var lat = position.coords.latitude; // 위도
-            var lon = position.coords.longitude; // 경도
+<!--    var map = new kakao.maps.Map(mapContainer, mapOption);-->
 
-            var locPosition = new kakao.maps.LatLng(lat,lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-                message = '<div style="padding:5px;">당신의 위치</div>'; // 인포윈도우에 표시될 내용입니다
+<!--    // HTML5의 geolocation으로 사용할 수 있는지 확인합니다-->
+<!--    if (navigator.geolocation) {-->
+<!--        // GeoLocation을 이용해서 접속 위치를 얻어옵니다-->
+<!--        navigator.geolocation.getCurrentPosition(function(position) {-->
 
-            // 마커와 인포윈도우를 표시합니다
-            displayMarker(locPosition, message);
+<!--            var lat = position.coords.latitude; // 위도-->
+<!--            var lon = position.coords.longitude; // 경도-->
 
-            // $(document).ready(function(){
-            //     $.ajax({
-            //         type:"GET",
-            //         data:{"Lat":lat,"Lng":lon},
-            //         url:"/hospitaApi",
-            //         dataType:"json",
-            //         success: function (data){console.log(data);
-            //         },
-            //         error : function (error){console.log(error);
-            //         }
-            //     })
-            // });
-        });
+<!--            var locPosition = new kakao.maps.LatLng(lat,lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다-->
+<!--                message = '<div style="padding:5px;">당신의 위치</div>'; // 인포윈도우에 표시될 내용입니다-->
 
-    } else { // HTML5의 GeoLocation을 사용할 수 없을때
-        console.log("사용못함");
-        var locPosition = new kakao.maps.LatLng(37.566826, 126.9786567)
-        alert('현재 위치를 찾을 수 없습니다!');
-    }
+<!--            // 마커와 인포윈도우를 표시합니다-->
+<!--            displayMarker(locPosition, message);-->
 
-    function displayMarker(locPosition, message) {
-        // 마커를 생성합니다
-        var marker = new kakao.maps.Marker({
-            map: map,
-            position: locPosition
-        });
+<!--            // $(document).ready(function(){-->
+<!--            //     $.ajax({-->
+<!--            //         type:"GET",-->
+<!--            //         data:{"Lat":lat,"Lng":lon},-->
+<!--            //         url:"/hospitaApi",-->
+<!--            //         dataType:"json",-->
+<!--            //         success: function (data){console.log(data);-->
+<!--            //         },-->
+<!--            //         error : function (error){console.log(error);-->
+<!--            //         }-->
+<!--            //     })-->
+<!--            // });-->
+<!--        });-->
 
-        var iwContent = message, // 인포윈도우에 표시할 내용
-            iwRemoveable = true;
+<!--    } else { // HTML5의 GeoLocation을 사용할 수 없을때-->
+<!--        console.log("사용못함");-->
+<!--        var locPosition = new kakao.maps.LatLng(37.566826, 126.9786567)-->
+<!--        alert('현재 위치를 찾을 수 없습니다!');-->
+<!--    }-->
 
-        // 인포윈도우를 생성합니다
-        var infowindow = new kakao.maps.InfoWindow({
-            content : iwContent,
-            removable : iwRemoveable
-        });
+<!--    function displayMarker(locPosition, message) {-->
+<!--        // 마커를 생성합니다-->
+<!--        var marker = new kakao.maps.Marker({-->
+<!--            map: map,-->
+<!--            position: locPosition-->
+<!--        });-->
 
-        // 인포윈도우를 마커위에 표시합니다
-        infowindow.open(map, marker);
+<!--        var iwContent = message, // 인포윈도우에 표시할 내용-->
+<!--            iwRemoveable = true;-->
 
-        // 지도 중심좌표를 접속위치로 변경합니다
-        map.setCenter(locPosition);
-    }
+<!--        // 인포윈도우를 생성합니다-->
+<!--        var infowindow = new kakao.maps.InfoWindow({-->
+<!--            content : iwContent,-->
+<!--            removable : iwRemoveable-->
+<!--        });-->
 
-    // 마우스 드래그로 지도 이동이 완료되었을 때 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
-    kakao.maps.event.addListener(map, 'dragend', function() {
+<!--        // 인포윈도우를 마커위에 표시합니다-->
+<!--        infowindow.open(map, marker);-->
 
-        // 지도 중심좌표를 얻어옵니다
-        var latlng = map.getCenter();
-           $.ajax({
-               type:"GET",
-               data:{"Lat":latlng.getLat(),"Lng":latlng.getLng()},
-               url:"/hospitaApi",
-               dataType:"json",
-               success: function (data){mapApi(data);
-               },
-               error : function (error){console.log(error);
-               }
-           })
+<!--        // 지도 중심좌표를 접속위치로 변경합니다-->
+<!--        map.setCenter(locPosition);-->
+<!--    }-->
 
+<!--    // 마우스 드래그로 지도 이동이 완료되었을 때 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다-->
+<!--    kakao.maps.event.addListener(map, 'dragend', function() {-->
 
-
-        //동적으로 마커 생성하는 함수
-
-        function mapApi(data) {
-            var positions =[];
-            removeMarker();
-            console.log("markers 길이 ==" + markers.length);
-
-            Object.keys(data).forEach(function (k) {
-                 console.log("키 값=" + k + ", 데이터 값= " + data[k].addr+" 이름 ="+data[k].yadmNm)
-                for (var i = 0; i < k.length; i++) {
-                    // 마커를 생성하고 지도에 표시합니다
-                    // var placePosition = new kakao.maps.LatLng(latlng.getLat(), latlng.getLng()),
-                    //     marker = addMarker(placePosition, i);
-
-                    var iwContent = '<div style="padding:5px;">'+data[k].yadmNm+'</div>',
-                        iwPosition = new kakao.maps.LatLng(data[k].YPos, data[k].XPos);
-                    marker = addMarker(iwPosition);
-
-                    var infowindow = new kakao.maps.InfoWindow({
-                        position : iwPosition,
-                        content : iwContent
-                    });
-                    infowindow.open(map, marker);
-
-                    kakao.maps.event.addListener(marker, 'click', function() {
-                        // 마커 위에 인포윈도우를 표시합니다
-                        var nameDiv = document.getElementById('name');
-                        var locationDiv = document.getElementById('location');
-                        var phoneNumDiv = document.getElementById('phoneNum');
-                        var coordinateDiv = document.getElementById('coordinate');
-                        var saveBtn= document.getElementById("saveBtn");
-                        var canBtn= document.getElementById("canBtn");
-                        nameDiv.innerHTML = data[k].yadmNm;
-                        locationDiv.innerHTML = data[k].addr;
-                        phoneNumDiv.innerHTML = data[k].telno;
-                        coordinateDiv.innerHTML = "("+data[k].XPos+"/"+data[k].YPos+")";
-                        saveBtn.style.display="block";
-                        canBtn.style.display="block";
+<!--        // 지도 중심좌표를 얻어옵니다-->
+<!--        var latlng = map.getCenter();-->
+<!--           $.ajax({-->
+<!--               type:"GET",-->
+<!--               data:{"Lat":latlng.getLat(),"Lng":latlng.getLng()},-->
+<!--               url:"/hospitaApi",-->
+<!--               dataType:"json",-->
+<!--               success: function (data){mapApi(data);-->
+<!--               },-->
+<!--               error : function (error){console.log(error);-->
+<!--               }-->
+<!--           })-->
 
 
 
+<!--        //동적으로 마커 생성하는 함수-->
 
-                    });
+<!--        function mapApi(data) {-->
+<!--            var positions =[];-->
+<!--            removeMarker();-->
+<!--            console.log("markers 길이 ==" + markers.length);-->
+
+<!--            Object.keys(data).forEach(function (k) {-->
+<!--                 console.log("키 값=" + k + ", 데이터 값= " + data[k].addr+" 이름 ="+data[k].yadmNm)-->
+<!--                for (var i = 0; i < k.length; i++) {-->
+<!--                    // 마커를 생성하고 지도에 표시합니다-->
+<!--                    // var placePosition = new kakao.maps.LatLng(latlng.getLat(), latlng.getLng()),-->
+<!--                    //     marker = addMarker(placePosition, i);-->
+
+<!--                    var iwContent = '<div style="padding:5px;">'+data[k].yadmNm+'</div>',-->
+<!--                        iwPosition = new kakao.maps.LatLng(data[k].YPos, data[k].XPos);-->
+<!--                    marker = addMarker(iwPosition);-->
+
+<!--                    var infowindow = new kakao.maps.InfoWindow({-->
+<!--                        position : iwPosition,-->
+<!--                        content : iwContent-->
+<!--                    });-->
+<!--                    infowindow.open(map, marker);-->
+
+<!--                    kakao.maps.event.addListener(marker, 'click', function() {-->
+<!--                        // 마커 위에 인포윈도우를 표시합니다-->
+<!--                        var nameDiv = document.getElementById('name');-->
+<!--                        var locationDiv = document.getElementById('location');-->
+<!--                        var phoneNumDiv = document.getElementById('phoneNum');-->
+<!--                        var coordinateDiv = document.getElementById('coordinate');-->
+<!--                        var saveBtn= document.getElementById("saveBtn");-->
+<!--                        var canBtn= document.getElementById("canBtn");-->
+<!--                        nameDiv.innerHTML = data[k].yadmNm;-->
+<!--                        locationDiv.innerHTML = data[k].addr;-->
+<!--                        phoneNumDiv.innerHTML = data[k].telno;-->
+<!--                        coordinateDiv.innerHTML = "("+data[k].XPos+"/"+data[k].YPos+")";-->
+<!--                        saveBtn.style.display="block";-->
+<!--                        canBtn.style.display="block";-->
+<!--                        nameDiv.style.display="block";-->
+<!--                        locationDiv.style.display="block";-->
+<!--                        phoneNumDiv.style.display="block";-->
+<!--                        coordinateDiv.style.display="block";-->
 
 
 
-                }// end for
 
 
-                console.log("나갈 때 markers 길이 ==" + markers.length);
-            })
 
-        }
+<!--                    });-->
 
 
-        function addMarker(position) {
-            var markers =[];
-                marker = new kakao.maps.Marker({
-                    position: position // 마커의 위치
-                });
 
-            marker.setMap(map); // 지도 위에 마커를 표출합니다
-            markers.push(marker);  // 배열에 생성된 마커를 추가합니다
-
-            return marker;
-        }
-
-        function removeMarker() {
-            for ( var i = 0; i < markers.length; i++ ) {
-                markers[i].setMap(null);
-            }
-            markers = [];
-        }
+<!--                }// end for-->
 
 
-    });
+<!--                console.log("나갈 때 markers 길이 ==" + markers.length);-->
+<!--            })-->
 
-</script>
-</body>
-</html>
+<!--        }-->
+
+
+<!--        function addMarker(position) {-->
+<!--            var markers =[];-->
+<!--                marker = new kakao.maps.Marker({-->
+<!--                    position: position // 마커의 위치-->
+<!--                });-->
+
+<!--            marker.setMap(map); // 지도 위에 마커를 표출합니다-->
+<!--            markers.push(marker);  // 배열에 생성된 마커를 추가합니다-->
+
+<!--            return marker;-->
+<!--        }-->
+
+<!--        function removeMarker() {-->
+<!--            for ( var i = 0; i < markers.length; i++ ) {-->
+<!--                markers[i].setMap(null);-->
+<!--            }-->
+<!--            markers = [];-->
+<!--        }-->
+
+
+<!--    });-->
+
+<!--    function save(){-->
+<!--        var nameDiv = document.getElementById('name').innerText;-->
+<!--        var locationDiv = document.getElementById('location').innerText;-->
+<!--        var phoneNumDiv = document.getElementById('phoneNum').innerText;-->
+<!--        var coordinateDiv = document.getElementById('coordinate').innerText;-->
+
+<!--        $.ajax({-->
+<!--            type:"POST",-->
+<!--            data:{"location_name":nameDiv,"location":locationDiv,"phoneNum":phoneNumDiv,"coordinate":coordinateDiv},-->
+<!--            url:"/myLocation",-->
+<!--            success: function (status){-->
+<!--                if(status==0){-->
+<!--                    alert("등록완료")-->
+<!--                }else if(status==100){-->
+<!--                    alert("이미 등록된 장소입니다.")-->
+<!--                }else{-->
+<!--                    alert("예기치 못한 오류가 발생했습니다.")-->
+<!--                }-->
+<!--            },-->
+<!--            error : function (error){-->
+<!--                console.log(error);-->
+<!--            }-->
+<!--        })-->
+
+
+<!--    }-->
+<!--    function cancel(){-->
+<!--        var nameDiv = document.getElementById('name');-->
+<!--        var locationDiv = document.getElementById('location');-->
+<!--        var phoneNumDiv = document.getElementById('phoneNum');-->
+<!--        var coordinateDiv = document.getElementById('coordinate');-->
+<!--        var saveBtn= document.getElementById("saveBtn");-->
+<!--        var canBtn= document.getElementById("canBtn");-->
+<!--        nameDiv.style.display="none";-->
+<!--        locationDiv.style.display="none";-->
+<!--        phoneNumDiv.style.display="none";-->
+<!--        coordinateDiv.style.display="none";-->
+<!--        saveBtn.style.display="none";-->
+<!--        canBtn.style.display="none";-->
+
+<!--    }-->
+
+<!--    //search 함수-->
+<!--    $(document).ready(function(){-->
+<!--        $.ajax({-->
+<!--            type:"GET",-->
+<!--            url:"/myLocation",-->
+<!--            success: function (data){-->
+<!--                console.log(data)-->
+<!--            },-->
+<!--            error : function (error){-->
+<!--                console.log(error);-->
+<!--            }-->
+<!--        })-->
+<!--    })-->
+
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
