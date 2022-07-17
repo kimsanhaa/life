@@ -1,6 +1,5 @@
 # 프로젝트명
 > 카카오 Map api를 이용한 위치기반 병원찾기서비스 
-> 주소 : sanha.p-e.kr
 
 ## 버전
 >JAVA 11 , Spring boot 2.7.1 ver
