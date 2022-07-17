@@ -25,8 +25,5 @@
 ![image](https://user-images.githubusercontent.com/98083809/179388755-727b30c4-8184-4d95-8e3b-b0d25828177b.png)
 
 >페이지 화면 넘어갈시 페이징처리(무한스크롤)
->https://user-images.githubusercontent.com/98083809/179389105-08a1c030-6250-4110-8c29-5c2a86d1b3ff.mp4
+https://user-images.githubusercontent.com/98083809/179389105-08a1c030-6250-4110-8c29-5c2a86d1b3ff.mp4
 
-#이슈사항
->지도 api 마커 생성시간 느림.
->geolocation을 이용해서 접속 위치를 알아내는데 http에서는 보안상 지원 안함. 
