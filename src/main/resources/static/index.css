@@ -75,5 +75,7 @@
 #table{
     height:700px;
     overflow: auto;
-
+}
+.btn {
+    cursor: pointer;
 }
