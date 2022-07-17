@@ -10,6 +10,8 @@
     height: 125px;
     border: 1px solid dodgerblue;
     background-color: white;
+    text-align: center;
+    font-size: 40px;
 }
 .leftMap{
     float: left;
@@ -78,4 +80,7 @@
 }
 .btn {
     cursor: pointer;
+}
+.headText{
+    margin-top: 30px;
 }
