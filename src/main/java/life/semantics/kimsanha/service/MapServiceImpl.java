@@ -55,14 +55,12 @@ public class MapServiceImpl implements MapService {
 
     //저장된 위치 삭제
     public ResponseEntity<Void> removeLocation(String locationName ){
-        int status;
         try {
             mapDAO.deleteLocation(locationName);
            return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
         }
 
     }

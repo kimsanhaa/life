@@ -33,6 +33,7 @@ var map = new kakao.maps.Map(mapContainer, mapOption);
     // 지도 중심좌표를 얻어옵니다
 $(document).ready(function () {
      var latlng = map.getCenter();
+    //latlng.getLat(); , latlng.getLng;
     $.ajax({
         type: "GET",
         data: {"lat": 37.505754, "lng": 127.040938},
@@ -150,7 +151,7 @@ $(document).ready(function () {
 })
 
 
-function delete_col(cnt) {
+function deleteCol(cnt) {
     var listLocationName = document.getElementById("a_" + cnt).innerText;
     var div_num = document.getElementById("div_" + cnt);
     $.ajax({
@@ -170,16 +171,16 @@ function delete_col(cnt) {
     })
 
 }
-var scrollchk = true;
+var scrollChk = true;
 var mutex = false;
 $("#table").scroll(function () {
-    mutex = false;
+    mutex = false; //잠금장치
     let $window = $(this);
     let scrollTop = $window.scrollTop();
     let windowHeight = $window.height();
     let documentHeight = $(document).height(); //전체 높이
 
-    if (scrollchk) {
+    if (scrollChk) {
         if (scrollTop + windowHeight + 170 > documentHeight && !mutex) {
             mutex = true;
             onScroll();
@@ -199,7 +200,6 @@ function cancel() {
     coordinateDiv.style.display = "none";
     saveBtn.style.display = "none";
     canBtn.style.display = "none";
-
 }
 function onScroll() {
     $.ajax({
@@ -230,7 +230,7 @@ function html(data) {
     var html = "<div id=div_" + data.num + ">"
     html += "<div id=" + "a_" + data.num + ">" + data.locationName + "</div>"
     html += "<a>" + data.phoneNum + "</a>"
-    html += "<input type='button' id='btn' onclick='delete_col(" + data.num + ")' value='삭제'/>"
+    html += "<input type='button' id='btn' onclick='deleteCol(" + data.num + ")' value='삭제'/>"
     html += "</div>"
     $("#table").append(html);
 }
