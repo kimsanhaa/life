@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 
-<mapper namespace="life.semantics.kimsanha.dao.dao">
-    <resultMap id="locationResult" type="vo">
+<mapper namespace="life.semantics.kimsanha.dao.MapDAO">
+    <resultMap id="locationResult" type="MapVo">
         <result property="locationName" column="locationName"/>
         <result property="location" column="location"/>
         <result property="phoneNum" column="phoneNum"/>
@@ -13,13 +13,13 @@
         <result property="num" column="num"/>
 
     </resultMap>
-    <select id="save" resultType="vo">
+    <select id="insertLocation" resultType="MapVo">
 		<![CDATA[
         INSERT INTO location_db(locationName,location,phoneNum,coordinate)
         VALUES ( #{locationName},#{location} ,#{phoneNum} ,#{coordinate})]]>
 	</select>
 
-    <select id="search" resultMap="locationResult">
+    <select id="findTop10LocationList" resultMap="locationResult">
     <![CDATA[
         SELECT * FROM location_db
         ORDER BY num DESC
@@ -27,25 +27,25 @@
         ]]>
   </select>
 
-    <select id="delete">
+    <select id="deleteLocation">
     <![CDATA[
         DELETE FROM location_db where locationName=#{locationName};
         ]]>
   </select>
 
-    <select id="numCheck" resultType="int">
+    <select id="findLocationNum" resultType="int">
     <![CDATA[
         select num from location_db where locationName=#{locationName};
         ]]>
   </select>
 
-    <select id="searchCheck" resultType="int">
+    <select id="countLocationList" resultType="int">
     <![CDATA[
         SELECT count(*) FROM location_db WHERE  locationName=#{locationName};
         ]]>
   </select>
 
-    <select id="allSearch" resultMap="locationResult">
+    <select id="findLocationList" resultMap="locationResult">
     <![CDATA[
         SELECT * FROM location_db ORDER BY num DESC;
         ]]>

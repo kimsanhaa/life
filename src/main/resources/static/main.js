@@ -1,5 +1,4 @@
-var scrollList = [];
-var markers = [];
+var SCROLLLIST = [];
 var gelocationCheck = false;
 // 지도를 생성합니다
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div
@@ -108,7 +107,7 @@ function save() {
         statusCode: {
             200: function (num) {
                 alert("등록완료")
-                scrollList.push(locationName);
+                SCROLLLIST.push(locationName);
                 var cnt = num
                 var data = {
                     locationName: locationName,
@@ -140,7 +139,7 @@ $(document).ready(function () {
         success: function (data) {
             for (let i = 0; i < data.length; i++) {
                 html(data[i]); //html(data)를 이용하여 화면에 출력
-                scrollList.push(data[i].locationName);
+                SCROLLLIST.push(data[i].locationName);
 
             }
         },
@@ -207,21 +206,16 @@ function onScroll() {
         type: "GET",
         url: "/scroll",
         traditional: true,
-        data: {"scrollList": scrollList},
+        data: {"SCROLLLIST": SCROLLLIST},
         success: function (data) {
-            const set = new Set(scrollList);
-            scrollList = [...set];
+            const setScrollList = new Set(SCROLLLIST);
+            SCROLLLIST = [...setScrollList];
             for (let i = 0; i < data.length; i++) {
-                console.log("화면에 띄울거에요 ==" + data[i].locationName);
-                scrollList.push(data[i].locationName);
-            }
-
+                SCROLLLIST.push(data[i].locationName);}
+                //화면에 뿌려진 값 넣기
             for (let i = 0; i < data.length; i++) {
-                if (data[i].locationName == "null") {
-                    continue;
-                }
                 html(data[i]);
-
+                //화면에 출력
             }
         },
         error: function (error) {
@@ -290,11 +284,4 @@ function addMarker(position) {
     markers.push(marker);  // 배열에 생성된 마커를 추가합니다
 
     return marker;
-}
-
-function removeMarker() {
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(null);
-    }
-    markers = [];
 }

@@ -1,9 +1,9 @@
 package life.semantics.kimsanha.service;
 
 
-import life.semantics.kimsanha.dao.dao;
+import life.semantics.kimsanha.dao.MapDAO;
 import life.semantics.kimsanha.handler.apiHandler;
-import life.semantics.kimsanha.vo.vo;
+import life.semantics.kimsanha.vo.MapVo;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +17,14 @@ import java.util.HashSet;
 import java.util.List;
 
 @Component("service")
-public class service {
+public class MapService {
 
-    private dao dao;
+    private MapDAO mapDAO;
     private apiHandler apihandler;
 
     @Autowired
-    public service(dao dao,apiHandler apihandler) {
-        this.dao = dao;
+    public MapService(MapDAO mapDAO, apiHandler apihandler) {
+        this.mapDAO = mapDAO;
         this.apihandler=apihandler;
     }
 
@@ -34,12 +34,12 @@ public class service {
 
     // 저장
     public ResponseEntity<Integer> saveLocation(String locationName, String location, String phoneNum, String coordinate) {
-        int count = dao.searchCheck(locationName); //이미 저장된 값이 있는지 확인
+        int count = mapDAO.countLocationList(locationName); //이미 저장된 값이 있는지 확인
 
         //저장가능
         if(count==0){
-            dao.save(locationName, location, phoneNum, coordinate);
-               int num = dao.numCheck(locationName); //방금 저장한 num 가져오기
+            mapDAO.insertLocation(locationName, location, phoneNum, coordinate);
+               int num = mapDAO.findLocationNum(locationName); //방금 저장한 num 가져오기
             return new ResponseEntity<Integer>(num,HttpStatus.OK);
         }else{
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -48,8 +48,8 @@ public class service {
 
 
     //모든 장소 검색
-    public List<vo> placeSearch(){
-       List<vo> places = dao.search();
+    public List<MapVo> placeSearch(){
+       List<MapVo> places = mapDAO.findTop10LocationList();
         return places;
     }
 
@@ -57,7 +57,7 @@ public class service {
     public ResponseEntity<Void> deleteLocation(String locationName ){
         int status;
         try {
-            dao.delete(locationName);
+            mapDAO.deleteLocation(locationName);
            return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
@@ -67,39 +67,33 @@ public class service {
 
     }
 
-    public HashSet<vo> scrollevent(List<String> scrollList) {
+    public HashSet<MapVo> scrollevent(List<String> scrollList) {
         //중복 삭제하기 위한 Hash
-        HashSet<String> HashList = new HashSet<>(scrollList);
-        scrollList = new ArrayList<>(HashList);
+        HashSet<String> hashScrollList = new HashSet<>(scrollList);
+         scrollList = new ArrayList<>(hashScrollList);
 
-
-        List<vo> allList = dao.allSearch(); // 전체 가져오기
+        List<MapVo> allList = mapDAO.findLocationList(); // 전체 저장한 리스트 가져오기
 
         //전체 장소 list - 현재 화면에 표시된 list 담을 list
-        HashSet<vo> nextScrollList = new HashSet<>();
+        HashSet<MapVo> nextScrollList = new HashSet<>();
+        //현재 스크롤 리스트(화면에 뿌려지는 값이) != db에 저장된 list와 사이즈가 다르면 실행 -> 아직 화면에 전체 list가 없다는 뜻
         if(scrollList.size()!=allList.size()) {
-            for (vo vo1 : allList) {
+            for (MapVo list : allList) { //db 리스트 값 for문
                 boolean check = true;
-                for (int i = 0; i < scrollList.size(); i++) {
-                    if (vo1.getLocationName().equals(scrollList.get(i))) {
+                for (int i = 0; i < scrollList.size(); i++) { //현재 화면에 뿌려진 list
+                    if (list.getLocationName().equals(scrollList.get(i))) { //현재 값이 뿌려진 값과 일치하면 break
                         check = false;
+                        break;
                     }
                 }
 
                 if (check) {
-
-                    nextScrollList.add(vo1);
+                    nextScrollList.add(list);
                     if (nextScrollList.size() == 5) {
                         break;
                     }
                 }
             }
-        }else{
-            HashSet<vo> nullList = new HashSet<>();
-            vo vo = new vo();
-            nullList.add(vo);
-
-            return nullList;
         }
         return nextScrollList;
     }

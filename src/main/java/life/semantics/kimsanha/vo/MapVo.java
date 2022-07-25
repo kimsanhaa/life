@@ -1,20 +1,14 @@
 package life.semantics.kimsanha.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-@Component("vo")
-public class vo {
+@Component("MapVo")
+public class MapVo {
     private String locationName;
     private String location;
     private String phoneNum;
     private String coordinate;
     private int num;
-
-
 
     public String getLocationName() {
         return locationName;
@@ -53,14 +47,6 @@ public class vo {
 
     public void setNum(int num) {
         this.num = num;
-    }
-
-    public vo() {
-        this.locationName = "null";
-        this.location = "null";
-        this.phoneNum = "null";
-        this.coordinate = "null";
-        this.num = 0;
     }
 }
 
