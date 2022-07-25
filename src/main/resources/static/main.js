@@ -103,7 +103,7 @@ function save() {
     $.ajax({
         type: "POST",
         data: {"locationName": locationName, "location": location, "phoneNum": phoneNum, "coordinate": coordinate},
-        url: "/myLocation",
+        url: "/location",
         statusCode: {
             200: function (num) {
                 alert("등록완료")
@@ -135,7 +135,7 @@ function save() {
 $(document).ready(function () {
     $.ajax({
         type: "GET",
-        url: "/myLocation",
+        url: "/location",
         success: function (data) {
             for (let i = 0; i < data.length; i++) {
                 html(data[i]); //html(data)를 이용하여 화면에 출력
@@ -156,7 +156,7 @@ function delete_col(cnt) {
     $.ajax({
         type: "DELETE",
         data: {"locationName": listLocationName},
-        url: "/myLocation",
+        url: "/location",
         statusCode:{
           200:function(){
               alert("삭제완료");

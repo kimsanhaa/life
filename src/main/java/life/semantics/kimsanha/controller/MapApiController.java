@@ -1,7 +1,7 @@
 package life.semantics.kimsanha.controller;
 
 
-import life.semantics.kimsanha.service.MapService;
+import life.semantics.kimsanha.service.MapServiceImpl;
 import life.semantics.kimsanha.vo.MapVo;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
@@ -20,11 +20,11 @@ import java.util.List;
 public class MapApiController {
     private static final Logger log = LoggerFactory.getLogger(MapApiController.class);
 
-    private MapService mapService;
+    private MapServiceImpl mapServiceImpl;
 
     @Autowired
-    public MapApiController(MapService mapService) {
-        this.mapService = mapService;
+    public MapApiController(MapServiceImpl mapServiceImpl) {
+        this.mapServiceImpl = mapServiceImpl;
     }
 
     @GetMapping("")
@@ -37,37 +37,37 @@ public class MapApiController {
     @GetMapping("/hospitalApi")
     public JSONArray callApi(@RequestParam("lat") String lat, @RequestParam("lng") String lng) throws ParseException, IOException {
         log.info("callApi() 호출");
-        return mapService.createJsonData(lat,lng);
+        return mapServiceImpl.createJsonData(lat,lng);
     }
 
-    @PostMapping("/myLocation")
+    @PostMapping("/location")
     @ResponseBody
-    public ResponseEntity<?> save(@RequestParam("locationName") String locationName,
+    public ResponseEntity<?> locationAdd(@RequestParam("locationName") String locationName,
                      @RequestParam("location") String location,
                      @RequestParam("phoneNum") String phoneNum,
                      @RequestParam("coordinate") String coordinate){
         log.info("save() controller");
-        return  mapService.saveLocation(locationName, location, phoneNum, coordinate);
+        return  mapServiceImpl.addLocation(locationName, location, phoneNum, coordinate);
     }
 
-    @GetMapping("/myLocation")
+    @GetMapping("/location")
     @ResponseBody
-    public List<MapVo> search(){
+    public List<MapVo> locationList(){
         log.info("search() controller");
-        return mapService.placeSearch();
+        return mapServiceImpl.findTop10List();
     }
 
-    @DeleteMapping("/myLocation")
+    @DeleteMapping("/location")
     @ResponseBody
-    public ResponseEntity<?> delete(@RequestParam("locationName") String locationName){
+    public ResponseEntity<?> locationRemove(@RequestParam("locationName") String locationName){
         log.info("delete() controller");
-           return  mapService.deleteLocation(locationName);
+           return  mapServiceImpl.removeLocation(locationName);
     }
 
     @GetMapping("/scroll")
     @ResponseBody
     public HashSet<MapVo> scrollEvent(@RequestParam List<String> SCROLLLIST){
-        return mapService.scrollevent(SCROLLLIST);
+        return mapServiceImpl.scrollEvent(SCROLLLIST);
     }// end scrollevent
 
 
