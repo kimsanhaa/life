@@ -36,8 +36,8 @@ $(document).ready(function () {
      var latlng = map.getCenter();
     $.ajax({
         type: "GET",
-        data: {"Lat": 37.505754, "Lng": 127.040938},
-        url: "/hospitaApi",
+        data: {"lat": 37.505754, "lng": 127.040938},
+        url: "/hospitalApi",
         dataType: "json",
         success: function (data) {
            // console.log(data);
@@ -83,8 +83,8 @@ kakao.maps.event.addListener(map, 'dragend', function () {
     var latlng = map.getCenter();
     $.ajax({
         type: "GET",
-        data: {"Lat": latlng.getLat(), "Lng": latlng.getLng()},
-        url: "/hospitaApi",
+        data: {"lat": latlng.getLat(), "lng": latlng.getLng()},
+        url: "/hospitalApi",
         dataType: "json",
         success: function (data) {
             mapApi(data);
@@ -96,32 +96,32 @@ kakao.maps.event.addListener(map, 'dragend', function () {
 });
 
 function save() {
-    var location_name = document.getElementById('name').innerText;
+    var locationName = document.getElementById('name').innerText;
     var location = document.getElementById('location').innerText;
     var phoneNum = document.getElementById('phoneNum').innerText;
     var coordinate = document.getElementById('coordinate').innerText;
 
     $.ajax({
         type: "POST",
-        data: {"location_name": location_name, "location": location, "phoneNum": phoneNum, "coordinate": coordinate},
+        data: {"locationName": locationName, "location": location, "phoneNum": phoneNum, "coordinate": coordinate},
         url: "/myLocation",
-        success: function (list) {
-            if (list[1] == 0) {
+        statusCode: {
+            200: function (num) {
                 alert("등록완료")
-                scrollList.push(location_name);
-                var cnt = parseInt(list[0])
+                scrollList.push(locationName);
+                var cnt = num
                 var data = {
-                    location_name: location_name,
+                    locationName: locationName,
                     location: location,
                     phoneNum: phoneNum,
                     coordinate: coordinate,
                     num: cnt
                 }
                 html(data);
-            } else if (list[1] == 1) {
+            },
+            400: function () {
                 alert("이미 등록된 장소입니다.");
             }
-
         },
         error: function (error) {
             console.log(error);
@@ -139,8 +139,8 @@ $(document).ready(function () {
         url: "/myLocation",
         success: function (data) {
             for (let i = 0; i < data.length; i++) {
-                html(data[i]);
-                scrollList.push(data[i].location_name);
+                html(data[i]); //html(data)를 이용하여 화면에 출력
+                scrollList.push(data[i].locationName);
 
             }
         },
@@ -152,20 +152,18 @@ $(document).ready(function () {
 
 
 function delete_col(cnt) {
-    var right_location_name = document.getElementById("a_" + cnt).innerText;
+    var listLocationName = document.getElementById("a_" + cnt).innerText;
     var div_num = document.getElementById("div_" + cnt);
     $.ajax({
         type: "DELETE",
-        data: {"location_name": right_location_name},
+        data: {"locationName": listLocationName},
         url: "/myLocation",
-        success: function (data) {
-            if (data == "ok") {
-                alert("삭제완료");
-                div_num.style.display = "none";
-
-            } else {
-                alert("오류발생");
-            }
+        statusCode:{
+          200:function(){
+              alert("삭제완료");
+              div_num.style.display = "none";
+          },
+            400:function (){alert("오류발생");}
         },
         error: function (error) {
             console.log(error);
@@ -174,10 +172,7 @@ function delete_col(cnt) {
 
 }
 var scrollchk = true;
-var page = 1;
 var mutex = false;
-var totalList;
-
 $("#table").scroll(function () {
     mutex = false;
     let $window = $(this);
@@ -217,12 +212,12 @@ function onScroll() {
             const set = new Set(scrollList);
             scrollList = [...set];
             for (let i = 0; i < data.length; i++) {
-                console.log("화면에 띄울거에요 ==" + data[i].location_name);
-                scrollList.push(data[i].location_name);
+                console.log("화면에 띄울거에요 ==" + data[i].locationName);
+                scrollList.push(data[i].locationName);
             }
 
             for (let i = 0; i < data.length; i++) {
-                if (data[i].location_name == "null") {
+                if (data[i].locationName == "null") {
                     continue;
                 }
                 html(data[i]);
@@ -239,7 +234,7 @@ function onScroll() {
 function html(data) {
     // console.log(data);
     var html = "<div id=div_" + data.num + ">"
-    html += "<div id=" + "a_" + data.num + ">" + data.location_name + "</div>"
+    html += "<div id=" + "a_" + data.num + ">" + data.locationName + "</div>"
     html += "<a>" + data.phoneNum + "</a>"
     html += "<input type='button' id='btn' onclick='delete_col(" + data.num + ")' value='삭제'/>"
     html += "</div>"

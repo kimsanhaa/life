@@ -1,7 +1,6 @@
 package life.semantics.kimsanha.controller;
 
 
-import life.semantics.kimsanha.dao.dao;
 import life.semantics.kimsanha.handler.apiHandler;
 import life.semantics.kimsanha.service.service;
 import life.semantics.kimsanha.vo.vo;
@@ -10,11 +9,11 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -22,12 +21,10 @@ import java.util.List;
 public class controller {
     private static final Logger log = LoggerFactory.getLogger(controller.class);
 
-    private apiHandler apihandler;
     private service service;
 
     @Autowired
-    public controller(apiHandler apihandler,service service) {
-        this.apihandler = apihandler;
+    public controller(service service) {
         this.service = service;
     }
 
@@ -38,45 +35,34 @@ public class controller {
     }
 
     @ResponseBody
-    @GetMapping("/hospitaApi")
-    public JSONArray callApi(@RequestParam("Lat") String Lat, @RequestParam("Lng") String Lng) throws ParseException, IOException {
+    @GetMapping("/hospitalApi")
+    public JSONArray callApi(@RequestParam("lat") String lat, @RequestParam("lng") String lng) throws ParseException, IOException {
         log.info("callApi() 호출");
-        return apihandler.Callapi(Lat,Lng);
+        return service.createJsonData(lat,lng);
     }
 
     @PostMapping("/myLocation")
     @ResponseBody
-    public String[] save(@RequestParam("location_name") String location_name,
+    public ResponseEntity<?> save(@RequestParam("locationName") String locationName,
                      @RequestParam("location") String location,
                      @RequestParam("phoneNum") String phoneNum,
                      @RequestParam("coordinate") String coordinate){
         log.info("save() controller");
-     String [] list =  service.save(location_name, location, phoneNum, coordinate);
-        return list;
-
+        return  service.saveLocation(locationName, location, phoneNum, coordinate);
     }
 
     @GetMapping("/myLocation")
     @ResponseBody
     public List<vo> search(){
         log.info("search() controller");
-        return service.search();
+        return service.placeSearch();
     }
 
     @DeleteMapping("/myLocation")
     @ResponseBody
-    public String delete(@RequestParam("location_name") String location_name){
+    public ResponseEntity<Void> delete(@RequestParam("locationName") String locationName){
         log.info("delete() controller");
-
-        String result;
-        try {
-            service.deleteLocation(location_name);
-            result="ok";
-        }catch (Exception e){
-            result="error";
-        }
-        return result;
-
+           return  service.deleteLocation(locationName);
     }
 
     @GetMapping("/scroll")

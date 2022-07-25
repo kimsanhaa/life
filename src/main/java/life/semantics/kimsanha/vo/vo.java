@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component("vo")
 public class vo {
-    private String location_name;
+    private String locationName;
     private String location;
     private String phoneNum;
     private String coordinate;
@@ -16,8 +16,8 @@ public class vo {
 
 
 
-    public String getLocation_name() {
-        return location_name;
+    public String getLocationName() {
+        return locationName;
     }
 
     public String getLocation() {
@@ -35,8 +35,8 @@ public class vo {
         return num;
     }
 
-    public void setLocation_name(String location_name) {
-        this.location_name = location_name;
+    public void setLocatioNname(String locationName) {
+        this.locationName = locationName;
     }
 
     public void setLocation(String location) {
@@ -56,7 +56,7 @@ public class vo {
     }
 
     public vo() {
-        this.location_name = "null";
+        this.locationName = "null";
         this.location = "null";
         this.phoneNum = "null";
         this.coordinate = "null";

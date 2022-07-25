@@ -6,7 +6,7 @@
 
 <mapper namespace="life.semantics.kimsanha.dao.dao">
     <resultMap id="locationResult" type="vo">
-        <result property="location_name" column="location_name"/>
+        <result property="locationName" column="locationName"/>
         <result property="location" column="location"/>
         <result property="phoneNum" column="phoneNum"/>
         <result property="coordinate" column="coordinate"/>
@@ -15,8 +15,8 @@
     </resultMap>
     <select id="save" resultType="vo">
 		<![CDATA[
-        INSERT INTO location_db(location_name,location,phoneNum,coordinate)
-        VALUES ( #{location_name},#{location} ,#{phoneNum} ,#{coordinate})]]>
+        INSERT INTO location_db(locationName,location,phoneNum,coordinate)
+        VALUES ( #{locationName},#{location} ,#{phoneNum} ,#{coordinate})]]>
 	</select>
 
     <select id="search" resultMap="locationResult">
@@ -29,19 +29,19 @@
 
     <select id="delete">
     <![CDATA[
-        DELETE FROM location_db where location_name=#{location_name};
+        DELETE FROM location_db where locationName=#{locationName};
         ]]>
   </select>
 
     <select id="numCheck" resultType="int">
     <![CDATA[
-        select num from location_db order by num desc limit 1;
+        select num from location_db where locationName=#{locationName};
         ]]>
   </select>
 
     <select id="searchCheck" resultType="int">
     <![CDATA[
-        SELECT count(*) FROM location_db WHERE  location_name=#{location_name};
+        SELECT count(*) FROM location_db WHERE  locationName=#{locationName};
         ]]>
   </select>
 

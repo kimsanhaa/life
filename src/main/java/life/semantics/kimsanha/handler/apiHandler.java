@@ -19,9 +19,9 @@ import java.net.URL;
 @Component
 public class apiHandler {
 
-    public JSONArray Callapi(String Lat, String Lng) throws ParseException, IOException,ClassCastException {
+    public JSONArray Callapi(String lat, String lng) throws ParseException, IOException,ClassCastException {
         StringBuilder sb = new StringBuilder();
-            String apiUrl = "http://apis.data.go.kr/B551182/hospInfoService1/getHospBasisList1?&xPos="+Lng+"&yPos="+Lat+"&radius=3000&ServiceKey=5upcC9FNi3LMpRN35u9OZebvFIfyR4W1FQy%2Fy2wz8IwyS4AytqVcxvmpVvX80colSKHCnt%2BZfA%2B3AwpJalHwog%3D%3D&_type=json";
+            String apiUrl = "http://apis.data.go.kr/B551182/hospInfoService1/getHospBasisList1?&xPos="+lng+"&yPos="+lat+"&radius=3000&ServiceKey=5upcC9FNi3LMpRN35u9OZebvFIfyR4W1FQy%2Fy2wz8IwyS4AytqVcxvmpVvX80colSKHCnt%2BZfA%2B3AwpJalHwog%3D%3D&_type=json";
 
             URL url = new URL(apiUrl);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
