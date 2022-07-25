@@ -1,6 +1,7 @@
 package life.semantics.kimsanha.handler;
 
 
+import org.apache.ibatis.jdbc.Null;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
@@ -17,11 +19,8 @@ import java.net.URL;
 @Component
 public class apiHandler {
 
-    public JSONArray Callapi(String Lat, String Lng) throws ParseException {
-        System.out.println("Callapi 호출");
+    public JSONArray Callapi(String Lat, String Lng) throws ParseException, IOException,ClassCastException {
         StringBuilder sb = new StringBuilder();
-        String jsonPrint = null;
-        try{
             String apiUrl = "http://apis.data.go.kr/B551182/hospInfoService1/getHospBasisList1?&xPos="+Lng+"&yPos="+Lat+"&radius=3000&ServiceKey=5upcC9FNi3LMpRN35u9OZebvFIfyR4W1FQy%2Fy2wz8IwyS4AytqVcxvmpVvX80colSKHCnt%2BZfA%2B3AwpJalHwog%3D%3D&_type=json";
 
             URL url = new URL(apiUrl);
@@ -33,34 +32,24 @@ public class apiHandler {
             while((returnLine = bufferedReader.readLine()) != null) {
                 sb.append(returnLine);
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String data = sb.toString();
-        JSONParser parser = new JSONParser();
-        try {
-            JSONArray item = getJsonArray(data, parser);
-
-            return item;
-        }catch (ParseException e){
-            System.out.println("null값 에러");
-        }
-
-        JSONArray item = getJsonArray(data, parser);
-        return item;
-
-
-
-
+            String callData = sb.toString(); //hospital APi를 통해서 얻은 값
+            return getJsonArray(callData);
     }
 
-    private JSONArray getJsonArray(String data, JSONParser parser) throws ParseException {
+    private JSONArray getJsonArray(String data) throws ParseException {
+        JSONParser parser = new JSONParser();
         JSONObject obj = (JSONObject) parser.parse(data);
         JSONObject response = (JSONObject) obj.get("response");
         JSONObject body = (JSONObject) response.get("body");
-        JSONObject items = (JSONObject) body.get("items");
-        JSONArray item = (JSONArray) items.get("item");
-        return item;
+
+       if(body.get("items").equals("")){
+           return null;
+       }
+           JSONObject items = (JSONObject) body.get("items");
+           return (JSONArray) items.get("item");
+
+        }
+
     }
-}
+
+

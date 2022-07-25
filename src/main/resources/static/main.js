@@ -5,12 +5,12 @@ var gelocationCheck = false;
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     mapOption = {
         center: new kakao.maps.LatLng(37.505754, 127.040938), // 지도의 중심좌표
-        level: 5 // 지도의 확대 레벨
+        level: 6 // 지도의 확대 레벨
     };
 
 var map = new kakao.maps.Map(mapContainer, mapOption);
 
-$(document).ready(function () {
+
     // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
     if (navigator.geolocation) {
         gelocationCheck = true;
@@ -31,16 +31,16 @@ $(document).ready(function () {
     } else { // HTML5의 GeoLocation을 사용할 수 없을때
         alert("GeoLocation 사용못함.");
     }
-    document.// 지도 중심좌표를 얻어옵니다
-        var
-    latlng = map.getCenter();
+    // 지도 중심좌표를 얻어옵니다
+$(document).ready(function () {
+     var latlng = map.getCenter();
     $.ajax({
         type: "GET",
         data: {"Lat": 37.505754, "Lng": 127.040938},
         url: "/hospitaApi",
         dataType: "json",
         success: function (data) {
-            console.log(data);
+           // console.log(data);
             mapApi(data);
         },
         error: function (error) {
@@ -188,7 +188,7 @@ $("#table").scroll(function () {
     if (scrollchk) {
         if (scrollTop + windowHeight + 170 > documentHeight && !mutex) {
             mutex = true;
-            onScroll("Data");
+            onScroll();
         }
     }
 });
@@ -251,7 +251,6 @@ function mapApi(data) {
     Object.keys(data).forEach(function (k) {
         for (var i = 0; i < k.length; i++) {
             // 마커를 생성하고 지도에 표시합니다
-
 
             var iwContent = '<div style="padding:5px;">' + data[k].yadmNm + '</div>',
                 iwPosition = new kakao.maps.LatLng(data[k].YPos, data[k].XPos);
