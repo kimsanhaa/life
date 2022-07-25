@@ -12,8 +12,8 @@ import java.util.List;
 public interface MapDAO {
     void insertLocation(String locationName,String location, String phoneNum, String coordinate) throws DataAccessException;
     List<MapVo> findTop10LocationList() throws DataAccessException; //10개만 select
-    void deleteLocation(String locationName) throws DataAccessException; //ㅇㅇ
-    List<MapVo> findLocationList() throws DataAccessException;
+    void deleteLocation(String locationName) throws DataAccessException;//삭제
+    List<MapVo> findLocationList() throws DataAccessException; //전체검색
     int countLocationList(String locationName) throws  DataAccessException;
     int findLocationNum(String locationName)throws DataAccessException;
 }
