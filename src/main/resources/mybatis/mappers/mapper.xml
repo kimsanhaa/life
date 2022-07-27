@@ -13,42 +13,33 @@
         <result property="num" column="num"/>
 
     </resultMap>
-    <select id="insertLocation" resultType="MapVo">
-		<![CDATA[
+    <insert id="insertLocation">
         INSERT INTO location_db(locationName,location,phoneNum,coordinate)
-        VALUES ( #{locationName},#{location} ,#{phoneNum} ,#{coordinate})]]>
-	</select>
+        VALUES ( #{locationName},#{location} ,#{phoneNum} ,#{coordinate})
+	</insert>
 
     <select id="findTop10LocationList" resultMap="locationResult">
-    <![CDATA[
         SELECT * FROM location_db
         ORDER BY num DESC
-            limit 0, 10;
-        ]]>
+            limit 0, 10
   </select>
 
-    <select id="deleteLocation">
-    <![CDATA[
-        DELETE FROM location_db where locationName=#{locationName};
-        ]]>
-  </select>
+    <delete id="deleteLocation">
+        DELETE FROM location_db where locationName=#{locationName}
+  </delete>
 
     <select id="findLocationNum" resultType="int">
-    <![CDATA[
-        select num from location_db where locationName=#{locationName};
-        ]]>
+        select num from location_db where locationName=#{locationName}
   </select>
 
     <select id="countLocationList" resultType="int">
-    <![CDATA[
-        SELECT count(*) FROM location_db WHERE  locationName=#{locationName};
-        ]]>
+
+        SELECT count(*) FROM location_db WHERE  locationName=#{locationName}
+
   </select>
 
     <select id="findLocationList" resultMap="locationResult">
-    <![CDATA[
-        SELECT * FROM location_db ORDER BY num DESC;
-        ]]>
+        SELECT * FROM location_db ORDER BY num DESC
   </select>
 
 
