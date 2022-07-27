@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 
-@Controller
+@RestController
 public class MapApiController {
     private static final Logger log = LoggerFactory.getLogger(MapApiController.class);
 
@@ -27,13 +27,7 @@ public class MapApiController {
         this.mapServiceImpl = mapServiceImpl;
     }
 
-    @GetMapping("")
-    public String index(){
-        log.info("index() Controller");
-        return "main";
-    }
 
-    @ResponseBody
     @GetMapping("/hospitalApi")
     public JSONArray callApi(@RequestParam("lat") String lat, @RequestParam("lng") String lng) throws ParseException, IOException {
         log.info("callApi() 호출");
@@ -41,7 +35,6 @@ public class MapApiController {
     }
 
     @PostMapping("/location")
-    @ResponseBody
     public ResponseEntity<?> locationAdd(@RequestParam("locationName") String locationName,
                      @RequestParam("location") String location,
                      @RequestParam("phoneNum") String phoneNum,
@@ -51,21 +44,18 @@ public class MapApiController {
     }
 
     @GetMapping("/location")
-    @ResponseBody
     public List<MapVo> locationList(){
         log.info("search() controller");
         return mapServiceImpl.findTop10List();
     }
 
     @DeleteMapping("/location")
-    @ResponseBody
     public ResponseEntity<?> locationRemove(@RequestParam("locationName") String locationName){
         log.info("delete() controller");
            return  mapServiceImpl.removeLocation(locationName);
     }
 
     @GetMapping("/scroll")
-    @ResponseBody
     public HashSet<MapVo> scrollEvent(@RequestParam List<String> SCROLLLIST){
         return mapServiceImpl.scrollEvent(SCROLLLIST);
     }// end scrollevent
